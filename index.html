@@ -7,13 +7,13 @@
 <style>
 
 body{
-font-family: Arial;
+font-family: Arial, sans-serif;
 margin:0;
-background:#f7f7fb;
+background:#f6f7fb;
 color:#444;
 }
 
-/* COVER */
+/* COVER PAGE */
 
 .cover{
 height:100vh;
@@ -21,26 +21,32 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-background:linear-gradient(135deg,#fcd5ff,#d7f3ff,#e6ffd7);
 text-align:center;
+background:linear-gradient(120deg,#ffd6e7,#d6f5ff,#e8ffd6);
 }
 
 .cover h1{
-font-size:40px;
+font-size:42px;
+color:#444;
+}
+
+.cover p{
+font-size:18px;
+margin-top:10px;
 }
 
 .cover button{
-padding:12px 25px;
+margin-top:25px;
+padding:14px 28px;
+background:#7ea6ff;
+color:white;
 border:none;
 border-radius:10px;
-background:#8fa7ff;
-color:white;
 font-size:16px;
 cursor:pointer;
-margin-top:20px;
 }
 
-/* APP */
+/* MAIN APP */
 
 .app{
 display:none;
@@ -50,52 +56,75 @@ padding:40px;
 .section{
 background:white;
 padding:20px;
-margin-bottom:20px;
-border-radius:10px;
-box-shadow:0 3px 8px rgba(0,0,0,0.05);
+border-radius:12px;
+margin-bottom:25px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
 }
 
+/* INPUTS */
+
 input,select{
-padding:8px;
-margin:5px;
-border-radius:6px;
+padding:9px;
+margin:6px;
+border-radius:7px;
 border:1px solid #ddd;
 }
 
+/* BUTTONS */
+
 button{
-padding:8px 12px;
-background:#b8e6c3;
+padding:9px 16px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 cursor:pointer;
+background:#9ee0b7;
 }
+
+/* TASK CARDS */
 
 .task{
-background:#fff4ff;
-border-left:6px solid #d9b3ff;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
+padding:14px;
+margin-top:12px;
+border-radius:10px;
+background:#fff7fd;
+border-left:6px solid #d7a6ff;
 }
 
-.progressBar{
-height:20px;
-background:#eee;
-border-radius:10px;
-margin-top:10px;
+/* TASK STATUS COLORS */
+
+.completed{
+border-left:6px solid #7ed8a8;
+background:#f1fff6;
 }
 
 .progress{
-height:100%;
-background:#a7e0c2;
-border-radius:10px;
-text-align:center;
-font-size:12px;
+border-left:6px solid #7fb9ff;
+background:#f3f8ff;
 }
 
-.smallBtn{
-background:#ffd6d6;
-margin-left:5px;
+/* DELETE BUTTON */
+
+.deleteBtn{
+background:#ffb6b6;
+margin-top:6px;
+}
+
+/* PROGRESS BAR */
+
+.progressContainer{
+height:22px;
+background:#eee;
+border-radius:12px;
+margin-top:10px;
+}
+
+.progressBar{
+height:100%;
+background:linear-gradient(90deg,#7ed8a8,#7fb9ff);
+border-radius:12px;
+text-align:center;
+font-size:12px;
+color:white;
 }
 
 </style>
@@ -104,22 +133,26 @@ margin-left:5px;
 
 <body>
 
-<div class="cover" id="coverPage">
+<!-- COVER PAGE -->
+
+<div class="cover" id="cover">
 
 <h1>Youth Remote Work Tracker</h1>
 
-<p>Track intern tasks, progress and performance</p>
+<p>Track tasks, progress and intern performance</p>
 
-<button onclick="enterApp()">Enter Dashboard</button>
+<button onclick="startApp()">Enter Dashboard</button>
 
 </div>
 
 
-<div class="app" id="appPage">
+<!-- MAIN APP -->
+
+<div class="app" id="app">
 
 <div class="section">
 
-<h2>Intern View</h2>
+<h2>Intern Dashboard</h2>
 
 <input id="internName" placeholder="Enter your name">
 
@@ -134,9 +167,9 @@ margin-left:5px;
 
 <h2>Supervisor Panel</h2>
 
-<input id="taskTitle" placeholder="Task Title">
+<input id="taskTitle" placeholder="Task title">
 
-<input id="intern" placeholder="Intern Name">
+<input id="intern" placeholder="Intern name">
 
 <input id="department" placeholder="Department">
 
@@ -154,18 +187,16 @@ margin-left:5px;
 
 <br><br>
 
-Filter by Department:
+<input id="deptFilter" placeholder="Filter department">
 
-<input id="filterDept" placeholder="Department name">
-
-<button onclick="filterDepartment()">Filter</button>
+<button onclick="filterDept()">Filter</button>
 
 </div>
 
 
 <div class="section">
 
-<h2>All Tasks</h2>
+<h2>Tasks</h2>
 
 <div id="taskList"></div>
 
@@ -178,73 +209,75 @@ Filter by Department:
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-function saveTasks(){
+function save(){
 localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function enterApp(){
-document.getElementById("coverPage").style.display="none";
-document.getElementById("appPage").style.display="block";
+function startApp(){
+document.getElementById("cover").style.display="none";
+document.getElementById("app").style.display="block";
 displayTasks();
 }
 
 function addTask(){
 
-const task = {
-
-taskTitle:document.getElementById("taskTitle").value,
-intern:document.getElementById("intern").value,
-department:document.getElementById("department").value,
-deadline:document.getElementById("deadline").value,
-status:document.getElementById("status").value,
-rating:document.getElementById("rating").value
-
+let task={
+title:taskTitle.value,
+intern:intern.value,
+department:department.value,
+deadline:deadline.value,
+status:status.value,
+rating:rating.value
 };
 
 tasks.push(task);
 
-saveTasks();
+save();
 
 displayTasks();
 
 }
 
-function displayTasks(list = tasks){
-
-const taskList = document.getElementById("taskList");
+function displayTasks(list=tasks){
 
 taskList.innerHTML="";
 
-list.forEach((task,index)=>{
+list.forEach((t,i)=>{
 
-taskList.innerHTML += `
-<div class="task">
+let style="";
 
-<b>${task.taskTitle}</b><br>
+if(t.status==="Completed") style="completed";
+if(t.status==="In Progress") style="progress";
 
-Intern: ${task.intern}<br>
+taskList.innerHTML+=`
 
-Department: ${task.department}<br>
+<div class="task ${style}">
 
-Deadline: ${task.deadline}<br>
+<b>${t.title}</b><br>
+
+Intern: ${t.intern}<br>
+
+Department: ${t.department}<br>
+
+Deadline: ${t.deadline}<br>
 
 Status:
 
-<select onchange="updateStatus(${index},this.value)">
+<select onchange="updateStatus(${i},this.value)">
 
-<option ${task.status=="Pending"?"selected":""}>Pending</option>
-<option ${task.status=="In Progress"?"selected":""}>In Progress</option>
-<option ${task.status=="Completed"?"selected":""}>Completed</option>
+<option ${t.status=="Pending"?"selected":""}>Pending</option>
+<option ${t.status=="In Progress"?"selected":""}>In Progress</option>
+<option ${t.status=="Completed"?"selected":""}>Completed</option>
 
 </select>
 
 <br>
 
-Rating: ${task.rating || "Not rated"}
+Rating: ${t.rating || "Not rated"}
 
-<br><br>
+<br>
 
-<button class="smallBtn" onclick="deleteTask(${index})">Delete</button>
+<button class="deleteBtn" onclick="deleteTask(${i})">Delete</button>
 
 </div>
 `;
@@ -253,21 +286,21 @@ Rating: ${task.rating || "Not rated"}
 
 }
 
-function deleteTask(index){
+function deleteTask(i){
 
-tasks.splice(index,1);
+tasks.splice(i,1);
 
-saveTasks();
+save();
 
 displayTasks();
 
 }
 
-function updateStatus(index,newStatus){
+function updateStatus(i,status){
 
-tasks[index].status=newStatus;
+tasks[i].status=status;
 
-saveTasks();
+save();
 
 displayTasks();
 
@@ -275,32 +308,31 @@ displayTasks();
 
 function loadTasks(){
 
-const name=document.getElementById("internName").value;
+let name=internName.value;
 
-const myTasks=tasks.filter(t=>t.intern===name);
+let myTasks=tasks.filter(t=>t.intern===name);
 
 displayTasks(myTasks);
 
-calculateProgress(myTasks);
+showProgress(myTasks);
 
 }
 
-function calculateProgress(myTasks){
+function showProgress(list){
 
-let total=myTasks.length;
+let total=list.length;
 
-let done=myTasks.filter(t=>t.status==="Completed").length;
+let done=list.filter(t=>t.status==="Completed").length;
 
-let percent= total===0 ? 0 : Math.round((done/total)*100);
+let percent= total===0?0:Math.round(done/total*100);
 
-document.getElementById("progressArea").innerHTML=
+progressArea.innerHTML=`
 
-`
 <h3>Progress</h3>
 
-<div class="progressBar">
+<div class="progressContainer">
 
-<div class="progress" style="width:${percent}%">
+<div class="progressBar" style="width:${percent}%">
 
 ${percent}%
 
@@ -309,15 +341,16 @@ ${percent}%
 </div>
 
 <p>${done} of ${total} tasks completed</p>
+
 `;
 
 }
 
-function filterDepartment(){
+function filterDept(){
 
-const dept=document.getElementById("filterDept").value;
+let dept=deptFilter.value;
 
-const filtered=tasks.filter(t=>t.department===dept);
+let filtered=tasks.filter(t=>t.department===dept);
 
 displayTasks(filtered);
 
@@ -328,4 +361,5 @@ displayTasks();
 </script>
 
 </body>
+
 </html>

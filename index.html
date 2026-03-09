@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <title>Youth Remote Work Tracker</title>
 
@@ -7,32 +8,94 @@
 
 body{
 font-family: Arial;
-margin:40px;
-background:#f2f2f2;
+margin:0;
+background:#f7f7fb;
+color:#444;
 }
 
-h1{
-color:#333;
+/* COVER */
+
+.cover{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#fcd5ff,#d7f3ff,#e6ffd7);
+text-align:center;
 }
 
-input, select{
+.cover h1{
+font-size:40px;
+}
+
+.cover button{
+padding:12px 25px;
+border:none;
+border-radius:10px;
+background:#8fa7ff;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-top:20px;
+}
+
+/* APP */
+
+.app{
+display:none;
+padding:40px;
+}
+
+.section{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.05);
+}
+
+input,select{
 padding:8px;
 margin:5px;
+border-radius:6px;
+border:1px solid #ddd;
 }
 
 button{
 padding:8px 12px;
-background:#1f6feb;
-color:white;
+background:#b8e6c3;
 border:none;
+border-radius:6px;
 cursor:pointer;
 }
 
 .task{
-background:white;
-padding:12px;
+background:#fff4ff;
+border-left:6px solid #d9b3ff;
+padding:10px;
 margin-top:10px;
 border-radius:6px;
+}
+
+.progressBar{
+height:20px;
+background:#eee;
+border-radius:10px;
+margin-top:10px;
+}
+
+.progress{
+height:100%;
+background:#a7e0c2;
+border-radius:10px;
+text-align:center;
+font-size:12px;
+}
+
+.smallBtn{
+background:#ffd6d6;
+margin-left:5px;
 }
 
 </style>
@@ -41,14 +104,33 @@ border-radius:6px;
 
 <body>
 
+<div class="cover" id="coverPage">
+
 <h1>Youth Remote Work Tracker</h1>
+
+<p>Track intern tasks, progress and performance</p>
+
+<button onclick="enterApp()">Enter Dashboard</button>
+
+</div>
+
+
+<div class="app" id="appPage">
+
+<div class="section">
 
 <h2>Intern View</h2>
 
 <input id="internName" placeholder="Enter your name">
+
 <button onclick="loadTasks()">View My Tasks</button>
 
-<hr>
+<div id="progressArea"></div>
+
+</div>
+
+
+<div class="section">
 
 <h2>Supervisor Panel</h2>
 
@@ -66,13 +148,31 @@ border-radius:6px;
 <option>Completed</option>
 </select>
 
-<input id="rating" type="number" min="1" max="5" placeholder="Rating (1-5)">
+<input id="rating" type="number" min="1" max="5" placeholder="Rating">
 
 <button onclick="addTask()">Add Task</button>
 
-<h2>Task List</h2>
+<br><br>
+
+Filter by Department:
+
+<input id="filterDept" placeholder="Department name">
+
+<button onclick="filterDepartment()">Filter</button>
+
+</div>
+
+
+<div class="section">
+
+<h2>All Tasks</h2>
 
 <div id="taskList"></div>
+
+</div>
+
+</div>
+
 
 <script>
 
@@ -82,22 +182,23 @@ function saveTasks(){
 localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+function enterApp(){
+document.getElementById("coverPage").style.display="none";
+document.getElementById("appPage").style.display="block";
+displayTasks();
+}
+
 function addTask(){
 
-const taskTitle = document.getElementById("taskTitle").value;
-const intern = document.getElementById("intern").value;
-const department = document.getElementById("department").value;
-const deadline = document.getElementById("deadline").value;
-const status = document.getElementById("status").value;
-const rating = document.getElementById("rating").value;
-
 const task = {
-taskTitle,
-intern,
-department,
-deadline,
-status,
-rating
+
+taskTitle:document.getElementById("taskTitle").value,
+intern:document.getElementById("intern").value,
+department:document.getElementById("department").value,
+deadline:document.getElementById("deadline").value,
+status:document.getElementById("status").value,
+rating:document.getElementById("rating").value
+
 };
 
 tasks.push(task);
@@ -108,13 +209,13 @@ displayTasks();
 
 }
 
-function displayTasks(){
+function displayTasks(list = tasks){
 
 const taskList = document.getElementById("taskList");
 
 taskList.innerHTML="";
 
-tasks.forEach(task=>{
+list.forEach((task,index)=>{
 
 taskList.innerHTML += `
 <div class="task">
@@ -127,9 +228,23 @@ Department: ${task.department}<br>
 
 Deadline: ${task.deadline}<br>
 
-Status: ${task.status}<br>
+Status:
 
-Rating: ${task.rating || "Not Rated"}
+<select onchange="updateStatus(${index},this.value)">
+
+<option ${task.status=="Pending"?"selected":""}>Pending</option>
+<option ${task.status=="In Progress"?"selected":""}>In Progress</option>
+<option ${task.status=="Completed"?"selected":""}>Completed</option>
+
+</select>
+
+<br>
+
+Rating: ${task.rating || "Not rated"}
+
+<br><br>
+
+<button class="smallBtn" onclick="deleteTask(${index})">Delete</button>
 
 </div>
 `;
@@ -138,35 +253,73 @@ Rating: ${task.rating || "Not Rated"}
 
 }
 
+function deleteTask(index){
+
+tasks.splice(index,1);
+
+saveTasks();
+
+displayTasks();
+
+}
+
+function updateStatus(index,newStatus){
+
+tasks[index].status=newStatus;
+
+saveTasks();
+
+displayTasks();
+
+}
+
 function loadTasks(){
 
-const internName = document.getElementById("internName").value;
+const name=document.getElementById("internName").value;
 
-const taskList = document.getElementById("taskList");
+const myTasks=tasks.filter(t=>t.intern===name);
 
-taskList.innerHTML="";
+displayTasks(myTasks);
 
-tasks
-.filter(task => task.intern === internName)
-.forEach(task=>{
+calculateProgress(myTasks);
 
-taskList.innerHTML += `
-<div class="task">
+}
 
-<b>${task.taskTitle}</b><br>
+function calculateProgress(myTasks){
 
-Department: ${task.department}<br>
+let total=myTasks.length;
 
-Deadline: ${task.deadline}<br>
+let done=myTasks.filter(t=>t.status==="Completed").length;
 
-Status: ${task.status}<br>
+let percent= total===0 ? 0 : Math.round((done/total)*100);
 
-Rating: ${task.rating || "Not Rated"}
+document.getElementById("progressArea").innerHTML=
+
+`
+<h3>Progress</h3>
+
+<div class="progressBar">
+
+<div class="progress" style="width:${percent}%">
+
+${percent}%
 
 </div>
+
+</div>
+
+<p>${done} of ${total} tasks completed</p>
 `;
 
-});
+}
+
+function filterDepartment(){
+
+const dept=document.getElementById("filterDept").value;
+
+const filtered=tasks.filter(t=>t.department===dept);
+
+displayTasks(filtered);
 
 }
 

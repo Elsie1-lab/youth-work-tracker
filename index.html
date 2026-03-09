@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Youth Remote Work Tracker</title>
+
+<style>
+
+body{
+font-family: Arial;
+margin:40px;
+background:#f2f2f2;
+}
+
+h1{
+color:#333;
+}
+
+input, select{
+padding:8px;
+margin:5px;
+}
+
+button{
+padding:8px 12px;
+background:#1f6feb;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+.task{
+background:white;
+padding:12px;
+margin-top:10px;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Youth Remote Work Tracker</h1>
+
+<h2>Intern View</h2>
+
+<input id="internName" placeholder="Enter your name">
+<button onclick="loadTasks()">View My Tasks</button>
+
+<hr>
+
+<h2>Supervisor Panel</h2>
+
+<input id="taskTitle" placeholder="Task Title">
+
+<input id="intern" placeholder="Intern Name">
+
+<input id="department" placeholder="Department">
+
+<input type="date" id="deadline">
+
+<select id="status">
+<option>Pending</option>
+<option>In Progress</option>
+<option>Completed</option>
+</select>
+
+<input id="rating" type="number" min="1" max="5" placeholder="Rating (1-5)">
+
+<button onclick="addTask()">Add Task</button>
+
+<h2>Task List</h2>
+
+<div id="taskList"></div>
+
+<script>
+
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks(){
+localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function addTask(){
+
+const taskTitle = document.getElementById("taskTitle").value;
+const intern = document.getElementById("intern").value;
+const department = document.getElementById("department").value;
+const deadline = document.getElementById("deadline").value;
+const status = document.getElementById("status").value;
+const rating = document.getElementById("rating").value;
+
+const task = {
+taskTitle,
+intern,
+department,
+deadline,
+status,
+rating
+};
+
+tasks.push(task);
+
+saveTasks();
+
+displayTasks();
+
+}
+
+function displayTasks(){
+
+const taskList = document.getElementById("taskList");
+
+taskList.innerHTML="";
+
+tasks.forEach(task=>{
+
+taskList.innerHTML += `
+<div class="task">
+
+<b>${task.taskTitle}</b><br>
+
+Intern: ${task.intern}<br>
+
+Department: ${task.department}<br>
+
+Deadline: ${task.deadline}<br>
+
+Status: ${task.status}<br>
+
+Rating: ${task.rating || "Not Rated"}
+
+</div>
+`;
+
+});
+
+}
+
+function loadTasks(){
+
+const internName = document.getElementById("internName").value;
+
+const taskList = document.getElementById("taskList");
+
+taskList.innerHTML="";
+
+tasks
+.filter(task => task.intern === internName)
+.forEach(task=>{
+
+taskList.innerHTML += `
+<div class="task">
+
+<b>${task.taskTitle}</b><br>
+
+Department: ${task.department}<br>
+
+Deadline: ${task.deadline}<br>
+
+Status: ${task.status}<br>
+
+Rating: ${task.rating || "Not Rated"}
+
+</div>
+`;
+
+});
+
+}
+
+displayTasks();
+
+</script>
+
+</body>
+</html>

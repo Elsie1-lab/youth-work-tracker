@@ -13,30 +13,69 @@ background:#f6f7fb;
 color:#444;
 }
 
-/* COVER PAGE */
+/* COVER */
 
 .cover{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
+padding:80px 30px;
 text-align:center;
 background:linear-gradient(120deg,#ffd6e7,#d6f5ff,#e8ffd6);
 }
 
-.cover h1{
+/* LOGO TITLE */
+
+.logo{
 font-size:42px;
+font-weight:bold;
 color:#444;
 }
 
-.cover p{
-font-size:18px;
-margin-top:10px;
+.logo span{
+color:#7ea6ff;
 }
 
-.cover button{
-margin-top:25px;
+.subtitle{
+font-size:18px;
+margin-top:8px;
+}
+
+/* PROBLEM */
+
+.problem{
+max-width:800px;
+margin:40px auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+line-height:1.6;
+}
+
+/* FEATURES */
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+max-width:900px;
+margin:40px auto;
+}
+
+.featureCard{
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+.featureCard h4{
+margin-top:0;
+color:#666;
+}
+
+/* ENTER BUTTON */
+
+.enterBtn{
+margin-top:30px;
 padding:14px 28px;
 background:#7ea6ff;
 color:white;
@@ -46,7 +85,7 @@ font-size:16px;
 cursor:pointer;
 }
 
-/* MAIN APP */
+/* APP */
 
 .app{
 display:none;
@@ -61,16 +100,12 @@ margin-bottom:25px;
 box-shadow:0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* INPUTS */
-
 input,select{
 padding:9px;
 margin:6px;
 border-radius:7px;
 border:1px solid #ddd;
 }
-
-/* BUTTONS */
 
 button{
 padding:9px 16px;
@@ -90,8 +125,6 @@ background:#fff7fd;
 border-left:6px solid #d7a6ff;
 }
 
-/* TASK STATUS COLORS */
-
 .completed{
 border-left:6px solid #7ed8a8;
 background:#f1fff6;
@@ -102,14 +135,12 @@ border-left:6px solid #7fb9ff;
 background:#f3f8ff;
 }
 
-/* DELETE BUTTON */
-
 .deleteBtn{
 background:#ffb6b6;
 margin-top:6px;
 }
 
-/* PROGRESS BAR */
+/* PROGRESS */
 
 .progressContainer{
 height:22px;
@@ -137,11 +168,63 @@ color:white;
 
 <div class="cover" id="cover">
 
-<h1>Youth Remote Work Tracker</h1>
+<div class="logo">Youth <span>WorkTracker</span></div>
 
-<p>Track tasks, progress and intern performance</p>
+<p class="subtitle">
+Helping youth programmes manage remote internships and track progress
+</p>
 
-<button onclick="startApp()">Enter Dashboard</button>
+<div class="problem">
+
+<h3>Problem</h3>
+
+<p>
+Youth internship programmes often place interns in different departments, 
+but supervisors struggle to track tasks, monitor progress, and provide 
+structured feedback. Communication happens across emails, messages, and 
+spreadsheets, making it difficult to see how interns are performing.
+</p>
+
+<p>
+Without a simple tracking system, programmes risk missed deadlines, 
+limited accountability, and lost opportunities for mentorship.
+</p>
+
+<h3>Solution</h3>
+
+<p>
+Youth WorkTracker provides a simple digital space where supervisors assign 
+tasks, track progress, and rate intern performance while interns can see 
+their deadlines, progress, and feedback in one place.
+</p>
+
+</div>
+
+<div class="features">
+
+<div class="featureCard">
+<h4>Task Tracking</h4>
+<p>Supervisors assign tasks and deadlines to interns.</p>
+</div>
+
+<div class="featureCard">
+<h4>Progress Monitoring</h4>
+<p>Interns track their work completion using progress bars.</p>
+</div>
+
+<div class="featureCard">
+<h4>Private Feedback</h4>
+<p>Supervisors rate and review intern performance.</p>
+</div>
+
+<div class="featureCard">
+<h4>Department Oversight</h4>
+<p>Filter tasks by department for easier programme management.</p>
+</div>
+
+</div>
+
+<button class="enterBtn" onclick="startApp()">Enter Dashboard</button>
 
 </div>
 

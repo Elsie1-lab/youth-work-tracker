@@ -1,0 +1,7 @@
+<form id="taskForm">
+  <input type="text" id="title" placeholder="Task Title" required><br>
+  <textarea id="description" placeholder="Task Description"></textarea><br>
+  <input type="text" id="assignee" placeholder="Assign To" required><br>
+  <input type="date" id="deadline" required><br>
+  <button type="submit">Create Task</button>
+</form>

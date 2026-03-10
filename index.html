@@ -1,3 +1,90 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Job Toolkit</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#f8f8fc;
+color:#333;
+}
+
+header{
+background:#c7d2fe;
+padding:40px;
+text-align:center;
+}
+
+nav{
+background:#e9d5ff;
+padding:15px;
+text-align:center;
+}
+
+nav a{
+margin:10px;
+text-decoration:none;
+color:#333;
+font-weight:bold;
+}
+
+section{
+padding:40px;
+max-width:1000px;
+margin:auto;
+}
+
+.card{
+background:white;
+padding:20px;
+margin:20px 0;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+textarea,input{
+width:100%;
+padding:10px;
+margin-top:8px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+margin-top:10px;
+background:#a5f3fc;
+border:none;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#67e8f9;
+}
+
+.portfolio-item{
+background:#f1f5f9;
+padding:10px;
+margin-top:10px;
+border-radius:6px;
+}
+
+.mentor-post{
+background:#eef2ff;
+padding:12px;
+margin-top:10px;
+border-radius:6px;
+}
+
+/* POPUP */
+
 .modal{
 display:none;
 position:fixed;
@@ -15,11 +102,194 @@ margin:10% auto;
 padding:20px;
 width:60%;
 border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
 }
 
 .close{
 float:right;
-font-size:22px;
+font-size:24px;
 cursor:pointer;
 }
+
+footer{
+text-align:center;
+padding:20px;
+background:#ddd6fe;
+margin-top:40px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>First Job Toolkit</h1>
+<p>Helping youth navigate their first workplace</p>
+</header>
+
+<nav>
+<a href="#guides">Guides</a>
+<a href="#reflection">Reflection</a>
+<a href="#portfolio">Portfolio</a>
+<a href="#mentor">Mentor Space</a>
+</nav>
+
+<section id="guides">
+
+<h2>Workplace Guides</h2>
+
+<div class="card">
+<h3>Professional Email</h3>
+<p>Keep emails clear and respectful.</p>
+<p><i>Hello [Name], I am providing an update on the task assigned to me. I will complete it by tomorrow. Kind regards.</i></p>
+</div>
+
+<div class="card">
+<h3>Handling Mistakes</h3>
+<p>Communicate early if something goes wrong and explain how you plan to fix it.</p>
+</div>
+
+</section>
+
+<section id="reflection">
+
+<h2>Weekly Reflection</h2>
+
+<div class="card">
+
+<label>What did you learn this week?</label>
+<textarea id="learn"></textarea>
+
+<label>What challenge did you face?</label>
+<textarea id="challenge"></textarea>
+
+<button onclick="saveReflection()">Save Reflection</button>
+
+<p id="reflectionMessage"></p>
+
+</div>
+
+</section>
+
+<section id="portfolio">
+
+<h2>Portfolio Builder</h2>
+
+<div class="card">
+
+<label>Project or Task Name</label>
+<input type="text" id="projectName">
+
+<label>What did you do?</label>
+<textarea id="projectDescription"></textarea>
+
+<label>Skills Used</label>
+<input type="text" id="skills">
+
+<button onclick="addPortfolio()">Add Project</button>
+
+<div id="portfolioList"></div>
+
+</div>
+
+</section>
+
+<section id="mentor">
+
+<h2>Mentor Space</h2>
+
+<div class="card">
+
+<label>Your Name</label>
+<input type="text" id="mentorName">
+
+<label>Ask a question</label>
+<textarea id="mentorQuestion"></textarea>
+
+<button onclick="postQuestion()">Post Question</button>
+
+<div id="mentorFeed"></div>
+
+</div>
+
+</section>
+
+<footer>
+<p>Youth First Job Toolkit</p>
+</footer>
+
+<!-- POPUP WINDOW -->
+
+<div id="popupModal" class="modal">
+
+<div class="modal-content">
+
+<span class="close" onclick="closePopup()">&times;</span>
+
+<h3 id="popupTitle"></h3>
+
+<p id="popupText"></p>
+
+</div>
+
+</div>
+
+<script>
+
+function saveReflection(){
+document.getElementById("reflectionMessage").innerText =
+"Reflection saved. Keep building your experience."
+}
+
+function addPortfolio(){
+
+let name = document.getElementById("projectName").value
+let desc = document.getElementById("projectDescription").value
+let skills = document.getElementById("skills").value
+
+let list = document.getElementById("portfolioList")
+
+let item = document.createElement("div")
+item.className="portfolio-item"
+
+item.innerHTML =
+"<b>"+name+"</b><br>" +
+"<button onclick=\"openPopup('"+name+"','"+desc+" | Skills: "+skills+"')\">View Details</button>"
+
+list.appendChild(item)
+
+}
+
+function postQuestion(){
+
+let name = document.getElementById("mentorName").value
+let question = document.getElementById("mentorQuestion").value
+
+let feed = document.getElementById("mentorFeed")
+
+let post = document.createElement("div")
+post.className="mentor-post"
+
+post.innerHTML="<b>"+name+"</b>: "+question
+
+feed.appendChild(post)
+
+}
+
+function openPopup(title,text){
+
+document.getElementById("popupTitle").innerText=title
+document.getElementById("popupText").innerText=text
+document.getElementById("popupModal").style.display="block"
+
+}
+
+function closePopup(){
+document.getElementById("popupModal").style.display="none"
+}
+
+</script>
+
+</body>
+</html>
+```
